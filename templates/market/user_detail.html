@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    👤 {{ object.username }} profile
+  </h1>
+
+<p><strong>Name:</strong> {{ object.first_name }} {{ object.last_name }}</p>
+{% if object.city %}<p><strong>City:</strong> {{ object.city }}</p>{% endif %}
+{% if object.phone %}<p><strong>Phone:</strong> {{ object.phone }}</p>{% endif %}
+
+
+<hr>
+
+<h4>Items ({{ object.items.count }})</h4>
+{% for item in object.items.all %}
+    <div class="mb-1">
+        <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+        — {{ item.price }} UAH
+        — <span>{{ item.category.name }}</span>
+        {% if item.deal %}<span>Sold</span>{% endif %}
+    </div>
+{% empty %}
+    <p>No items yet.</p>
+{% endfor %}
+
+{% if user == object %}
+<hr>
+<h4>Purchases ({{ object.purchases.count }})</h4>
+{% for deal in object.purchases.all %}
+    <div class="mb-1">
+        <a href="{{ deal.item.get_absolute_url }}">{{ deal.item.title }}</a>
+        — {{ deal.item.price }} UAH
+        — {{ deal.created_at|date:"d M Y" }}
+    </div>
+{% empty %}
+    <p class="text-muted">No purchases yet.</p>
+{% endfor %}
+
+
+
+  {% endif %}
+
+{% endblock %}

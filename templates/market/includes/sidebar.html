@@ -1,0 +1,27 @@
+<div class="sidebar-brand">🛒 Flea Market</div>
+<ul class="sidebar-nav list-group">
+    {% if user.is_authenticated %}
+        <li class="list-group-item">
+            <a href="{{ request.user.get_absolute_url }}">👤 {{ request.user.get_username }}</a>
+        </li>
+        <li class="list-group-item">
+{#            <a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>#}
+  <a href="{% url 'market:logout' %}">Logout</a>
+        </li>
+    {% else %}
+        <li class="list-group-item">
+            <a href="{% url 'login' %}?next={{ request.path }}">Login</a>
+        </li>
+        <li class="list-group-item">
+{#            <a href="{% url 'market:register' %}">Register</a>#}
+        </li>
+    {% endif %}
+
+    <br>
+
+    <li class="list-group-item"><a href="{% url 'market:index' %}">🏠 Home</a></li>
+    <li class="list-group-item"><a href="{% url 'market:item-list' %}">📦 All items</a></li>
+    {% if user.is_authenticated %}
+        <li class="list-group-item"><a href="{% url 'market:item-create' %}">➕ Sell something</a></li>
+    {% endif %}
+</ul>

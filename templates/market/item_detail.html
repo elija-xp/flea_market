@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>
+    {{ item.title }}
+    {% if user == item.seller %}
+        <a href="{% url 'market:item-update' pk=item.id %}" class="btn btn-secondary link-to-page">
+            Update
+        </a>
+        <a href="{% url 'market:item-delete' pk=item.id %}" class="btn btn-danger link-to-page">
+            Delete
+        </a>
+    {% endif %}
+</h1>
+
+<p><strong>Price:</strong> {{ item.price }} UAH</p>
+<p><strong>Category:</strong> {{ item.category.name }}</p>
+<p><strong>Posted:</strong> {{ item.created_at|date:"d M Y" }}</p>
+<p><strong>Seller:</strong> <a href="{{ item.seller.get_absolute_url }}">{{ item.seller.username }}</a>
+    {% if item.seller.city %} — {{ item.seller.city }}{% endif %}
+    {% if item.seller.phone %} · 📞 {{ item.seller.phone }}{% endif %}
+</p>
+
+<hr>
+<p>{{ item.description }}</p>
+<hr>
+
+<div class="mt-3">
+    {% if item.deal %}
+        <span class="badge badge-secondary badge-lg p-2">✓ Sold to {{ item.deal.buyer.username }}</span>
+    {% elif user == item.seller %}
+        <span class="text-muted">You are the seller of this item.</span>
+    {% else %}
+        <a href="{% url 'market:buy-item' pk=item.id %}" class="btn btn-success mr-2">
+            💰 Buy
+        </a>
+    {% endif %}
+
+  <a href="{% url 'market:toggle-wishlist' pk=item.id %}" class="btn btn-outline-warning">
+      {% if item in user.wishlist.all %}
+          ★ Remove from wishlist
+      {% else %}
+          ☆ Add to wishlist
+      {% endif %}
+  </a>
+</div>
+
+<div class="mt-3 text-muted small">
+    ❤️ {{ item.wished_by.count }} user{{ item.wished_by.count|pluralize }} saved this
+</div>
+{% endblock %}

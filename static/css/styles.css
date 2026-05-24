@@ -1,0 +1,45 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.sidebar-brand {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 15px;
+    background-color: #343a40;
+    color: #fff;
+    border-radius: 4px 4px 0 0;
+}
+
+.sidebar-nav {
+    margin-top: 0;
+    border-radius: 0 0 4px 4px;
+}
+
+.sidebar-nav .list-group-item {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+.sidebar-nav .list-group-item a {
+    color: #343a40;
+    text-decoration: none;
+}
+
+.sidebar-nav .list-group-item a:hover {
+    color: #007bff;
+}
+
+.link-to-page {
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+h1 {
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+}
+
+.badge-lg {
+    font-size: 1rem;
+}

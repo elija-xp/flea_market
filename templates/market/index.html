@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>🛒 Flea Market</h1>
+<p class="lead">Buy and sell anything — everyone is a seller and a buyer!</p>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ num_items }}</h3>
+                <p class="text-muted mb-0">Item</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ num_users }}</h3>
+                <p class="text-muted mb-0">Users</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ num_categories }}</h3>
+                <p class="text-muted mb-0">Categories</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ num_deals }}</h3>
+                <p class="text-muted mb-0">Deals made</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Recent items</h4>
+{% if recent_items %}
+    <table class="table table-hover">
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Seller</th>
+        </tr>
+        {% for item in recent_items %}
+        <tr>
+            <td><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></td>
+            <td>{{ item.category.name }}</td>
+            <td><strong>{{ item.price }} UAH</strong></td>
+            <td><a href="{{ item.seller.get_absolute_url }}">{{ item.seller.username }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No items yet. <a href="{% url 'market:item-create' %}">Be the first to sell!</a></p>
+{% endif %}
+{% endblock %}

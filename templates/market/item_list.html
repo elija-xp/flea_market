@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>
+    📦 Finds
+    <a href="{% url 'market:item-create' %}" class="btn btn-primary link-to-page">
+        + Sell
+    </a>
+</h1>
+
+<form method="get" class="form-inline mb-3">
+    {{ search_form }}
+    <button class="btn btn-secondary ml-2" type="submit">🔍</button>
+    {% if request.GET.title or request.GET.category %}
+        <a href="{% url 'market:item-list' %}" class="btn btn-outline-secondary ml-2">✕ Clear</a>
+    {% endif %}
+</form>
+
+<div class="mb-3">
+    {% for cat in categories %}
+        <a href="?category={{ cat.id }}{% if request.GET.title %}&title={{ request.GET.title }}{% endif %}"
+           class="btn btn-sm {% if selected_category == cat.id|stringformat:'s' %}btn-dark{% else %}btn-outline-dark{% endif %} mr-1 mb-1">
+            {{ cat.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% if item_list %}
+    <table class="table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Status</th>
+        </tr>
+        {% for item in item_list %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></td>
+            <td>{{ item.category.name }}</td>
+            <td><strong>{{ item.price }} UAH</strong></td>
+            <td><a href="{{ item.seller.get_absolute_url }}">{{ item.seller.username }}</a></td>
+            <td>
+                {% if item.deal %}
+                    <span class="badge badge-secondary">Sold</span>
+                {% else %}
+                    <span class="badge badge-success">Available</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No items found.</p>
+{% endif %}
+{% endblock %}
