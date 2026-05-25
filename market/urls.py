@@ -10,7 +10,9 @@ from market.views import (
     buy_item,
     toggle_wishlist,
     UserDetailView,
-    logout_view
+    logout_view,
+    UserRegisterView,
+    UserActivateView,
 )
 
 app_name = "market"
@@ -64,5 +66,15 @@ urlpatterns = [
         "logout/",
         logout_view,
         name="logout"
+    ),
+    path(
+        "register/",
+        UserRegisterView.as_view(),
+        name="register"
+    ),
+    path(
+        "activate/<str:uid>/<str:token>/",
+        UserActivateView.as_view(),
+        name="activate"
     ),
 ]
