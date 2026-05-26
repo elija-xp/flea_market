@@ -1,8 +1,6 @@
 from django import forms
 
-from django.contrib.auth.forms import UserCreationForm
-
-from market.models import Item, User
+from market.models import Item
 
 
 class ItemSearchForm(forms.Form):
@@ -18,11 +16,3 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ["title", "description", "price", "category"]
-
-
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField()
-
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = UserCreationForm.Meta.fields + ("email", "first_name", "last_name")

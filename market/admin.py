@@ -1,15 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 
-from market.models import User, Category, Item, Deal
-
-
-@admin.register(User)
-class CustomUserAdmin(UserAdmin):
-    list_display = ("username", "email", "phone", "city")
-    fieldsets = UserAdmin.fieldsets + (
-        ("Extra info", {"fields": ("phone", "city")}),
-    )
+from market.models import Category, Item, Deal
 
 
 @admin.register(Category)

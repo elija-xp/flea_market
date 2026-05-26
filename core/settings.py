@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     "market",
+    "users",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-AUTH_USER_MODEL = "market.User"
+AUTH_USER_MODEL = "users.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

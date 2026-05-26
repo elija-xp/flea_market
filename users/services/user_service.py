@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from market.services.activation_token_service import activation_token_service
-from market.services.email_service import UserEmailService
-from market.services.errors import UserAlreadyExist
+from users.services.activation_token_service import activation_token_service
+from users.services.email_service import UserEmailService
+from users.services.errors import UserAlreadyExist
 
 User = get_user_model()
 
@@ -21,14 +21,17 @@ class UserService:
         with transaction.atomic():
             if User.objects.filter(email=validated_data["email"]).exists():
                 raise UserAlreadyExist(
-                    f"User with email {validated_data['email']} already exists."
+                    f"User with email {validated_data['email']}"
+                    f" already exists."
                 )
 
             data = validated_data.copy()
             password = data.pop("password1")
             data.pop("password2")
 
-            user = User.objects.create_user(**data, password=password, is_active=False)
+            user = User.objects.create_user(
+                **data, password=password, is_active=False
+            )
             token = activation_token_service.make_token(user)
             uid = self._encode_user_id(user.id)
 

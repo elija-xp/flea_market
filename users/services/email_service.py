@@ -10,7 +10,7 @@ class UserEmailService:
         activation_link: str,
     ):
         html_content = render_to_string(
-            "market/email/acc_active_email.html",
+            "users/email/acc_active_email.html",
             context={
                 "username": username,
                 "activation_link": activation_link,
