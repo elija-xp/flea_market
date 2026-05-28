@@ -56,6 +56,11 @@ python manage.py runserver
 
 ## Usage
 
+Можно використати вхід тестовим користувачем:
+
+login: admin
+password: admin
+
 ### Для покупців
 
 1. Зареєструйся на платформі
