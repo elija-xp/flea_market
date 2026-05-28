@@ -4,7 +4,7 @@ from users.views import (
     UserRegisterView,
     UserActivateView,
     UserDetailView,
-    logout_view,
+    LogoutView,
 )
 
 app_name = "users"
@@ -27,7 +27,7 @@ urlpatterns = [
     ),
     path(
         "logout/",
-        logout_view,
+        LogoutView.as_view(),
         name="logout"
     ),
 ]

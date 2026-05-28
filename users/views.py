@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -11,7 +12,7 @@ from django.contrib.auth import get_user_model, logout
 User = get_user_model()
 
 
-class UserDetailView(generic.DetailView):
+class UserDetailView(LoginRequiredMixin, generic.DetailView):
     model = User
     queryset = User.objects.prefetch_related(
         "items__category", "wishlist__category", "purchases__item"
@@ -48,6 +49,7 @@ class UserActivateView(View):
         return HttpResponseRedirect(reverse_lazy("login"))
 
 
-def logout_view(request):
-    logout(request)
-    return render(request, 'registration/logged_out.html')
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return render(request, "registration/logged_out.html")

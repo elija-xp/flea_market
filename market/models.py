@@ -34,6 +34,9 @@ class Item(models.Model):
     def get_absolute_url(self):
         return reverse("market:item-detail", kwargs={"pk": self.pk})
 
+    def __str__(self):
+        return self.title
+
 
 class Deal(models.Model):
     item = models.OneToOneField(
@@ -46,3 +49,6 @@ class Deal(models.Model):
         related_name="purchases"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.item} - {self.buyer}"

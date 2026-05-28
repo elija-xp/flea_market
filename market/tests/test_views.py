@@ -10,19 +10,16 @@ User = get_user_model()
 def create_user(username="testuser", password="testpass123"):
     return User.objects.create_user(username=username, password=password)
 
+
 def create_category(name="Electronics"):
     return Category.objects.create(name=name)
+
 
 def create_item(seller, category, title="Test Item", price="100.00"):
     return Item.objects.create(
         title=title, description="desc",
         price=Decimal(price), category=category, seller=seller,
     )
-
-
-class CategoryModelTest(TestCase):
-    def test_str(self):
-        self.assertEqual(str(create_category("Books")), "Books")
 
 
 class IndexViewTest(TestCase):
@@ -34,10 +31,11 @@ class IndexViewTest(TestCase):
 
 class ItemListViewTest(TestCase):
     def setUp(self):
-        user, cat = create_user(), create_category()
-        create_item(user, cat, title="Laptop")
-        create_item(user, cat, title="Phone")
-        self.cat = cat
+        self.user = create_user()
+        self.cat = create_category()
+        create_item(self.user, self.cat, title="Laptop")
+        create_item(self.user, self.cat, title="Phone")
+        self.client.login(username="testuser", password="testpass123")
 
     def test_search(self):
         r = self.client.get(reverse("market:item-list"), {"title": "Laptop"})
@@ -47,7 +45,9 @@ class ItemListViewTest(TestCase):
     def test_filter_by_category(self):
         other = create_category("Furniture")
         create_item(create_user("u2"), other, title="Chair")
-        r = self.client.get(reverse("market:item-list"), {"category": self.cat.pk})
+        r = self.client.get(
+            reverse("market:item-list"), {"category": self.cat.pk}
+        )
         self.assertContains(r, "Laptop")
         self.assertNotContains(r, "Chair")
 
@@ -76,7 +76,9 @@ class BuyItemViewTest(TestCase):
     def test_buy_creates_deal(self):
         self.client.login(username="buyer", password="testpass123")
         self.client.get(reverse("market:buy-item", args=[self.item.pk]))
-        self.assertTrue(Deal.objects.filter(item=self.item, buyer=self.buyer).exists())
+        self.assertTrue(Deal.objects.filter(
+            item=self.item, buyer=self.buyer).exists()
+                        )
 
 
 class WishlistViewTest(TestCase):

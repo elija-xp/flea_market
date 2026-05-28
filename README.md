@@ -1,128 +1,128 @@
 # Flea Market
 
-Простий додаток для купівлі-продажу речей. Платформа, де кожен може бути як покупцем, так і продавцем.
+A simple buy-and-sell application. A platform where anyone can be both a buyer and a seller.
 
 ## Getting Started
 
-Це інструкція для встановлення та запуску проекту локально.
+This is a guide for installing and running the project locally.
 
 ### Prerequisites
 
 - Python 3.12+
-- pip (менеджер пакетів Python)
+- pip (Python package manager)
 - Git
 
 ### Installation
 
-1. Клонуй репозиторій
+1. Clone the repository
 
 ```bash
 git clone <repository-url>
 cd flea_market
 ```
 
-2. Створи віртуальне середовище
+2. Create a virtual environment
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # На Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-3. Встанови залежності
+3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Застосуй міграції
+4. Apply migrations
 
 ```bash
 python manage.py migrate
 ```
 
-5. Створи суперюзера (для адмін панелі)
+5. Create a superuser (for the admin panel)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-6. Запусти сервер розробки
+6. Start the development server
 
 ```bash
 python manage.py runserver
 ```
 
-Додаток буде доступний на http://127.0.0.1:8000/
+The app will be available at http://127.0.0.1:8000/
 
 ## Usage
 
-Можно використати вхід тестовим користувачем:
+You can log in with the test user credentials:
 
 login: admin
 password: admin
 
-### Для покупців
+### For Buyers
 
-1. Зареєструйся на платформі
-2. Переглянь список усіх товарів
-3. Використовуй пошук по назві або фільтрацію по категоріях
-4. Додавай цікаві товари до вішліста
-5. Купуй товари, які тебе цікавлять
+1. Register on the platform
+2. Browse the list of all items
+3. Use search by name or filter by category
+4. Add interesting items to your wishlist
+5. Purchase the items you want
 
-### Для продавців
+### For Sellers
 
-1. Залогінься в свій аккаунт
-2. Перейди на "Sell something"
-3. Заповни деталі товару (назва, опис, ціна, категорія)
-4. Опублікуй оголошення
-5. Чекай на покупців
+1. Log in to your account
+2. Go to "Sell something"
+3. Fill in the item details (name, description, price, category)
+4. Publish your listing
+5. Wait for buyers
 
-### Адміністрування
+### Administration
 
-Адмін панель доступна на http://127.0.0.1:8000/admin/
+The admin panel is available at http://127.0.0.1:8000/admin/
 
-Тут ти можеш:
-- Керувати користувачами
-- Переглядати та видаляти оголошення
-- Керувати категоріями
-- Переглядати завершені угоди
+Here you can:
+- Manage users
+- View and delete listings
+- Manage categories
+- View completed deals
 
 ## Features
 
-- Управління профілем користувача
-- Створення, редагування та видалення оголошень
-- Пошук та фільтрація товарів по категоріях
-- Система вишліста (додавання товарів до улюблених)
-- Система покупок (Deal) для відстеження проданих товарів
-- Email верифікація при реєстрації
--响應ний дизайн на базі Bootstrap 4
+- User profile management
+- Create, edit, and delete listings
+- Search and filter items by category
+- Wishlist system (save items to favourites)
+- Purchase system (Deal) for tracking sold items
+- Email verification on registration
+- Responsive design built with Bootstrap 4
 
 ## Project Structure
 
 ```
 flea_market/
-├── core/                    # Основні налаштування Django
+├── core/                    # Core Django settings
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
-├── users/                   # Управління користувачами
-│   ├── models.py           # User модель
-│   ├── views.py            # Реєстрація, активація
+├── users/                   # User management
+│   ├── models.py           # User model
+│   ├── views.py            # Registration, activation
 │   ├── forms.py
 │   ├── urls.py
-│   └── services/           # Бізнес-логіка
+│   └── services/           # Business logic
 │       ├── user_service.py
 │       ├── email_service.py
 │       ├── activation_token_service.py
 │       └── errors.py
-├── market/                  # Основна функціональність
+├── market/                  # Core functionality
 │   ├── models.py           # Item, Category, Deal
-│   ├── views.py            # Представлення
-│   ├── forms.py            # Форми
+│   ├── views.py            # Views
+│   ├── forms.py            # Forms
 │   ├── urls.py
-│   └── admin.py            # Адмін конфігурація
-├── templates/               # HTML шаблони
-├── static/                  # CSS, JS, зображення
+│   └── admin.py            # Admin configuration
+├── templates/               # HTML templates
+├── static/                  # CSS, JS, images
 └── manage.py
 ```
 
@@ -130,25 +130,25 @@ flea_market/
 
 - Django 6.0.5
 - Python 3.12
-- SQLite3 (розробка) / PostgreSQL (production)
+- SQLite3 (development) / PostgreSQL (production)
 - Bootstrap 4.5
 - django-crispy-forms
 
 ## Deployment
 
-Проект налаштований для развертування на Render.
+The project is configured for deployment on Render.
 
-1. Подели репо на GitHub
-2. Создай новий сервіс на Render
-3. Підключи GitHub репо
-4. Налаштуй environment variables в Render
+1. Push the repo to GitHub
+2. Create a new service on Render
+3. Connect the GitHub repo
+4. Configure environment variables in Render
 5. Deploy
 
 ## Contact
 
 Email: eyelja@gmail.com
 
-Маєш питання або пропозиції? Відкрий Issue в репозиторії.
+Have questions or suggestions? Open an Issue in the repository.
 
 ## License
 
