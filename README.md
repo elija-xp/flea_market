@@ -2,6 +2,8 @@
 
 A simple buy-and-sell application. A platform where anyone can be both a buyer and a seller.
 
+**Live Demo:** [flea-market-t0eu.onrender.com](https://flea-market-t0eu.onrender.com)
+
 ## Getting Started
 
 This is a guide for installing and running the project locally.
