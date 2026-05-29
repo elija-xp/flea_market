@@ -1,16 +1,13 @@
 from django.urls import path
 
 from market.views import (
-    index,
     ItemListView,
     ItemDetailView,
     ItemCreateView,
     ItemUpdateView,
     ItemDeleteView,
-    buy_item,
-    toggle_wishlist,
-    UserDetailView,
-    logout_view
+    ToggleWishlistView,
+    BuyItemView, IndexView,
 )
 
 app_name = "market"
@@ -18,7 +15,7 @@ app_name = "market"
 urlpatterns = [
     path(
         "",
-        index,
+        IndexView.as_view(),
         name="index"
     ),
     path(
@@ -48,21 +45,12 @@ urlpatterns = [
     ),
     path(
         "items/<int:pk>/buy/",
-        buy_item, name="buy-item"
+        BuyItemView.as_view(),
+        name="buy-item"
     ),
     path(
         "items/<int:pk>/wishlist/",
-        toggle_wishlist,
+        ToggleWishlistView.as_view(),
         name="toggle-wishlist"
-    ),
-    path(
-        "users/<int:pk>/",
-        UserDetailView.as_view(),
-        name="user-detail"
-    ),
-    path(
-        "logout/",
-        logout_view,
-        name="logout"
     ),
 ]

@@ -10,23 +10,31 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ("django-insecure-bt=z=d_^&ohij1)"
-              "(xk_x0b6sst$ji1j=9wh!n=l-twy9eh(fpm")
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-bt=z=d_^&ohij1)" "(xk_x0b6sst$ji1j=9wh!n=l-twy9eh(fpm",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -41,12 +49,14 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     "market",
+    "users",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -75,43 +85,29 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_val"
-                "idation.UserAttributeSimilarityValidator",
+        "idation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.pass"
-                "word_validation.MinimumLengthValidator",
+        "NAME": "django.contrib.auth.pass" "word_validation.MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password"
-                "_validation.CommonPasswordValidator",
+        "NAME": "django.contrib.auth.password" "_validation.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password"
-                "_validation.NumericPasswordValidator",
+        "NAME": "django.contrib.auth.password" "_validation.NumericPasswordValidator",
     },
 ]
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-AUTH_USER_MODEL = "market.User"
+AUTH_USER_MODEL = "users.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -130,3 +126,9 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = "market:index"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

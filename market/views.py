@@ -1,31 +1,33 @@
-from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
+from django.contrib.auth import get_user_model
+from django.views.generic import TemplateView
 
 from market.forms import ItemSearchForm, ItemForm
-from market.models import Item, Category, Deal, User
+from market.models import Item, Category, Deal
+
+User = get_user_model()
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    num_items = Item.objects.count()
-    num_users = User.objects.count()
-    num_categories = Category.objects.count()
-    num_deals = Deal.objects.count()
-    recent_items = Item.objects.select_related("category", "seller")
-    context = {
-        "num_items": num_items,
-        "num_users": num_users,
-        "num_categories": num_categories,
-        "num_deals": num_deals,
-        "recent_items": recent_items,
-    }
-    return render(request, "market/index.html", context)
+class IndexView(TemplateView):
+    template_name = "market/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["num_items"] = Item.objects.count()
+        context["num_users"] = User.objects.count()
+        context["num_categories"] = Category.objects.count()
+        context["num_deals"] = Deal.objects.count()
+        context["recent_items"] = Item.objects.select_related(
+            "category", "seller"
+        )
+        return context
 
 
-class ItemListView(generic.ListView):
+class ItemListView(LoginRequiredMixin, generic.ListView):
     model = Item
     paginate_by = 5
 
@@ -50,23 +52,12 @@ class ItemListView(generic.ListView):
         return queryset
 
 
-class ItemDetailView(generic.DetailView):
+class ItemDetailView(LoginRequiredMixin, generic.DetailView):
     model = Item
     pass
 
 
-class ItemCreateView(generic.CreateView):
-    model = Item
-    form_class = ItemForm
-    success_url = reverse_lazy("market:item-list")
-
-    def form_valid(self, form):
-        form.instance.seller = self.request.user
-        return super().form_valid(form)
-    pass
-
-
-class ItemUpdateView(generic.UpdateView):
+class ItemCreateView(LoginRequiredMixin, generic.CreateView):
     model = Item
     form_class = ItemForm
     success_url = reverse_lazy("market:item-list")
@@ -77,37 +68,40 @@ class ItemUpdateView(generic.UpdateView):
     pass
 
 
-class ItemDeleteView(generic.DeleteView):
+class ItemUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Item
+    form_class = ItemForm
+    success_url = reverse_lazy("market:item-list")
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user
+        return super().form_valid(form)
+    pass
+
+
+class ItemDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Item
     success_url = reverse_lazy("market:item-list")
     pass
 
 
-def buy_item(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    if not hasattr(item, "deal") and item.seller != request.user:
-        Deal.objects.create(item=item, buyer=request.user)
-    return HttpResponseRedirect(
-        reverse_lazy("market:item-detail", args=[pk])
-    )
+class BuyItemView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        item = get_object_or_404(Item, pk=pk)
+        if not hasattr(item, "deal") and item.seller != request.user:
+            Deal.objects.create(item=item, buyer=request.user)
+        return HttpResponseRedirect(
+            reverse_lazy("market:item-detail", args=[pk])
+        )
 
 
-def toggle_wishlist(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    if item in request.user.wishlist.all():
-        item.wished_by.remove(request.user)
-    else:
-        item.wished_by.add(request.user)
-    return HttpResponseRedirect(reverse_lazy("market:item-detail", args=[pk]))
-
-
-class UserDetailView(generic.DetailView):
-    model = User
-    queryset = User.objects.prefetch_related(
-        "items__category", "wishlist__category", "purchases__item"
-    )
-
-
-def logout_view(request):
-    logout(request)
-    return render(request, 'registration/logged_out.html')
+class ToggleWishlistView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        item = get_object_or_404(Item, pk=pk)
+        if item in request.user.wishlist.all():
+            item.wished_by.remove(request.user)
+        else:
+            item.wished_by.add(request.user)
+        return HttpResponseRedirect(
+            reverse_lazy("market:item-detail", args=[pk])
+        )
