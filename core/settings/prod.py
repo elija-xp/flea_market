@@ -41,3 +41,13 @@ LOGGING = {
         'level': 'ERROR',
     },
 }
+
+INSTALLED_APPS += ["anymail"]
+
+EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
+
+ANYMAIL = {
+    "RESEND_API_KEY": os.environ.get("RESEND_API_KEY"),
+}
+
+DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
