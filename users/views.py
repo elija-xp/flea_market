@@ -26,14 +26,11 @@ class UserRegisterView(generic.FormView):
     user_service = UserService()
 
     def form_valid(self, form: RegisterForm):
-        url = self.request.build_absolute_uri("/")
         self.user_service.register_user(
             validated_data=form.cleaned_data,
-            url=url,
+            url=None,
         )
-        messages.success(
-            self.request, "Check your email to activate your account."
-        )
+        messages.success(self.request, "Account created! You can now login.")
         return super().form_valid(form)
 
 

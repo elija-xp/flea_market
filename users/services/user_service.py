@@ -21,8 +21,7 @@ class UserService:
         with transaction.atomic():
             if User.objects.filter(email=validated_data["email"]).exists():
                 raise UserAlreadyExist(
-                    f"User with email {validated_data['email']}"
-                    f" already exists."
+                    f"User with email {validated_data['email']} already exists."
                 )
 
             data = validated_data.copy()
@@ -30,16 +29,7 @@ class UserService:
             data.pop("password2")
 
             user = User.objects.create_user(
-                **data, password=password, is_active=False
-            )
-            token = activation_token_service.make_token(user)
-            uid = self._encode_user_id(user.id)
-
-            activation_link = f"{url}activate/{uid}/{token}/"
-            self._email_service.send_activation_email(
-                username=user.username,
-                email=user.email,
-                activation_link=activation_link,
+                **data, password=password, is_active=True
             )
 
         return user
