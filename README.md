@@ -109,13 +109,12 @@ flea_market/
 │   └── wsgi.py
 ├── users/                   # User management
 │   ├── models.py           # User model
-│   ├── views.py            # Registration, activation
+│   ├── views.py            # Registration
 │   ├── forms.py
 │   ├── urls.py
 │   └── services/           # Business logic
 │       ├── user_service.py
 │       ├── email_service.py
-│       ├── activation_token_service.py
 │       └── errors.py
 ├── market/                  # Core functionality
 │   ├── models.py           # Item, Category, Deal

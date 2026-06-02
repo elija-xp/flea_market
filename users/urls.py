@@ -2,7 +2,6 @@ from django.urls import path
 
 from users.views import (
     UserRegisterView,
-    UserActivateView,
     UserDetailView,
     LogoutView,
 )
@@ -19,11 +18,6 @@ urlpatterns = [
         "register/",
         UserRegisterView.as_view(),
         name="register"
-    ),
-    path(
-        "activate/<str:uid>/<str:token>/",
-        UserActivateView.as_view(),
-        name="activate"
     ),
     path(
         "logout/",

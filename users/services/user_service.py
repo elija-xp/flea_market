@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from users.services.activation_token_service import activation_token_service
 from users.services.email_service import UserEmailService
 from users.services.errors import UserAlreadyExist
 
@@ -13,15 +11,12 @@ class UserService:
     def __init__(self, email_service: UserEmailService | None = None):
         self._email_service = email_service or UserEmailService()
 
-    @staticmethod
-    def _encode_user_id(user_id: int) -> str:
-        return urlsafe_base64_encode(str(user_id).encode())
-
     def register_user(self, validated_data: dict, url: str) -> User:
         with transaction.atomic():
             if User.objects.filter(email=validated_data["email"]).exists():
                 raise UserAlreadyExist(
-                    f"User with email {validated_data['email']} already exists."
+                    f"User with email {validated_data['email']}"
+                    f" already exists."
                 )
 
             data = validated_data.copy()
@@ -32,15 +27,4 @@ class UserService:
                 **data, password=password, is_active=True
             )
 
-        return user
-
-    def activate_user(self, uid: str, token: str) -> User:
-        pk = urlsafe_base64_decode(uid).decode()
-        user = User.objects.get(pk=pk)
-
-        if not activation_token_service.check_token(user, token):
-            raise ValueError("Invalid or expired token")
-
-        user.is_active = True
-        user.save()
         return user
