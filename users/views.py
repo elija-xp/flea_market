@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic, View
+from django.contrib.auth import login
 
 from users.forms import RegisterForm
 from users.services.user_service import UserService
@@ -22,28 +22,25 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
 class UserRegisterView(generic.FormView):
     form_class = RegisterForm
     template_name = "users/register.html"
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("market:index")
     user_service = UserService()
 
     def form_valid(self, form: RegisterForm):
-        self.user_service.register_user(
-            validated_data=form.cleaned_data,
-            url=None,
-        )
-        messages.success(self.request, "Account created! You can now login.")
-        return super().form_valid(form)
-
-
-class UserActivateView(View):
-    user_service = UserService()
-
-    def get(self, request, uid, token):
         try:
-            self.user_service.activate_user(uid=uid, token=token)
-            messages.success(request, "Account activated! You can now login.")
+            user = self.user_service.register_user(
+                validated_data=form.cleaned_data,
+                url=None
+            )
         except Exception:
-            messages.error(request, "Activation link is invalid or expired.")
-        return HttpResponseRedirect(reverse_lazy("login"))
+            form.add_error(
+                None, "There was an error creating your account."
+                      " This email already exist."
+            )
+            return self.form_invalid(form)
+
+        login(self.request, user)
+        messages.success(self.request, "Account created!")
+        return super().form_valid(form)
 
 
 class LogoutView(View):
